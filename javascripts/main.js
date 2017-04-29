@@ -47,11 +47,21 @@ $(document).ready(function(){
 	//edit todo 
 
 	//complete todo 
+	$(".main-container").on("click", 'input[type="checkbox"]',(event)=>{
+		console.log("id",event.target.id);
+		FbApi.checker(event.target.id).then(()=>{
+			FbApi.writeDom();
+			countTask();
+		}).catch((error)=>{
+			console.log("checker error",error);
+		});
+	});
+
 
 
 	let countTask = () => {
-		let remainingTasks = $("incompleted-tasks li").length;
-		$("#counter").hide().fadeIn(3000).html(remainingTasks);
+		let remainingTasks = $("#incompleted-tasks li").length;
+		$("#counter").hide().fadeIn(300).html(remainingTasks);
 	};
 
 });

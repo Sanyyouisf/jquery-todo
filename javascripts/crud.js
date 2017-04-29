@@ -32,6 +32,13 @@ var FbApi = ((oldCrap) => {
 		});
 	};
 
+	oldCrap.checker = (id) => {
+		return new Promise ((resolve,reject) => {
+			FbApi.setChecker(id);
+			resolve();
+		});
+	};
+
 
 
 	return oldCrap;
