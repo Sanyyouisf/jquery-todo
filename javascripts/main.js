@@ -55,8 +55,25 @@ $(document).ready(function(){
 	});
 	
 
-
 	//edit todo 
+	$(".main-container").on("click",'.edit',(event)=> {
+		//closest go up one level
+		//find go down one level
+		//when clicking in the edit it grap the text and put in the text input.
+		let editText = $(event.target).closest('.col-xs-4').siblings('col-xs-8').find('.task').html();
+		FbApi.editTodo(event.target.id).then(()=>{
+		$(".list-container").addClass("hide");
+		$(".new-container").removeClass("hide");
+		$("#add-todo-text").val(editText);
+
+			// FbApi.writeDom();
+			// countTask();
+		}).catch((error)=>{
+			console.log(" error in editTodo",error);
+		});
+	});
+
+
 
 	//complete todo 
 	$(".main-container").on("click", 'input[type="checkbox"]',(event)=>{
