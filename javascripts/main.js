@@ -60,7 +60,9 @@ $(document).ready(function(){
 		//closest go up one level
 		//find go down one level
 		//when clicking in the edit it grap the text and put in the text input.
-		let editText = $(event.target).closest('.col-xs-4').siblings('col-xs-8').find('.task').html();
+		
+		let editText = $(event.target).closest('.col-xs-4').siblings('.col-xs-8').find('.task').html();
+		console.log("editText",editText);
 		FbApi.editTodo(event.target.id).then(()=>{
 		$(".list-container").addClass("hide");
 		$(".new-container").removeClass("hide");
