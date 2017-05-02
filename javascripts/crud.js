@@ -1,16 +1,16 @@
 //augmenter
 var FbApi = ((oldCrap) => {
 	//this function convert the object to an array and loop through it and push the object to the array
-	oldCrap.getTodos = () =>{
+	oldCrap.getTodos = (apikeys) =>{
 		let items =[];
 		return new Promise ((resolve,reject) => {
-			$.ajax ("./database/seed.json")
+			$.ajax (`${apikeys.databaseURL}/items.json`)
 			.done((data)=>{
 				//response here is object  of items
-				let response = data.items;
+				let response = data;
 				console.log("response",response);
 				//Object.keys convert the response object to an array 
-				//forEach will loop through this aray item0,item1,item2
+				//forEach will loop through this aray [item0,item1,item2]
 				Object.keys(response).forEach((key) =>{
 					console.log("key",key);
 					response[key].id = key;
@@ -20,9 +20,8 @@ var FbApi = ((oldCrap) => {
 					console.log("response[key]",response[key]);
 					console.log("items",items);
 				});
-				FbApi.setTodos(items);
-				resolve();
-				// console.log("data",data);
+				resolve(items);
+				// console.log("items in resolve",items);
 			})
 			.fail((error)=>{
 				reject(error);
@@ -31,37 +30,48 @@ var FbApi = ((oldCrap) => {
 	};
 
 
-	oldCrap.addTodo = (newTodo) => {
+	oldCrap.addTodo = (apikeys,newTodo) => {
 		return new Promise ((resolve,reject) => {
-			//newTodo.id =item +the number of items in the todo array (for example item3).
-			newTodo.id = `item${FbApi.todoGetter().length}`;
-			console.log("newTodo",newTodo);
-			//push the new item (with the id:item3 for example)to the todo array. 
-			FbApi.setSingleTodo(newTodo);
-			resolve();
+			//Load data from the server using a HTTP POST request
+			$.ajax({
+				method :'post',
+				url: `${apikeys.databaseURL}/items.json`,
+				data:JSON.stringify(newTodo)//this method converts a JavaScript value to a JSON string
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
-	//check for the item is completed or not 
-	oldCrap.checker = (id) => {
-		return new Promise ((resolve,reject) => {
-			FbApi.setChecker(id);
-			resolve();
-		});
-	};
 
 	//delete the item from the array
-	oldCrap.deleteTodo = (id) => {
+	oldCrap.deleteTodo = (apikeys,id) => {
 		return new Promise ((resolve,reject) => {
-			FbApi.duhlete(id);
-			resolve();
+			$.ajax({
+				method :'delete',
+				url: `${apikeys.databaseURL}/items/${id}.json`
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
-	oldCrap.editTodo = (id) => {
+	oldCrap.editTodo = (apikeys,editTodo,id) => {
 		return new Promise ((resolve,reject) => {
-			FbApi.duhlete(id);
-			resolve();
+			//POST is used to create” and “PUT is used to edit.
+			$.ajax({
+				method :'put',
+				url: `${apikeys.databaseURL}/items/${id}.json`,
+				data:JSON.stringify(editTodo)//
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
