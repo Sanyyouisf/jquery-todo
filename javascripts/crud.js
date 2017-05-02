@@ -1,13 +1,13 @@
 //augmenter
 var FbApi = ((oldCrap) => {
 	//this function convert the object to an array and loop through it and push the object to the array
-	oldCrap.getTodos = () =>{
+	oldCrap.getTodos = (apikeys) =>{
 		let items =[];
 		return new Promise ((resolve,reject) => {
-			$.ajax ("./database/seed.json")
+			$.ajax (`${apikeys.databaseURL}/items.json`)
 			.done((data)=>{
 				//response here is object  of items
-				let response = data.items;
+				let response = data;
 				console.log("response",response);
 				//Object.keys convert the response object to an array 
 				//forEach will loop through this aray item0,item1,item2
@@ -20,8 +20,7 @@ var FbApi = ((oldCrap) => {
 					console.log("response[key]",response[key]);
 					console.log("items",items);
 				});
-				FbApi.setTodos(items);
-				resolve();
+				resolve(items);
 				// console.log("data",data);
 			})
 			.fail((error)=>{

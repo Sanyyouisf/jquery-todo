@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-	
+	let apikey ;
 	//when clicking on new it hide the list-container and show new-container  
 	$("#new-item").click(() => {
 		$(".list-container").addClass("hide");
@@ -13,15 +13,32 @@ $(document).ready(function(){
 		$(".new-container").addClass("hide");
 		$(".list-container").removeClass("hide");
 	});
-	FbApi.getTodos()
-	.then(()=>{
-		FbApi.writeDom();
-		countTask();
-		// console.log("results",results);
-	})
-	.catch((error)=>{
-		console.log("getTodos error",error);
-	});
+
+	FbApi.firebaseCredentials().then((key)=> {
+		apikey = key;
+    firebase.initializeApp(apikey);
+    FbApi.writeDom(apikey);
+     countTask();
+   }).catch((error) => {
+     console.log("key errors", error);
+   });
+	
+
+
+
+	// FbApi.getTodos()
+	// .then(()=>{
+	// 	FbApi.writeDom();
+	// 	countTask();
+	// 	// console.log("results",results);
+	// })
+	// .catch((error)=>{
+	// 	console.log("getTodos error",error);
+	// });
+
+
+
+
 
 	//add todo
 	//when writing in the text box of the new page
