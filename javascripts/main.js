@@ -1,6 +1,7 @@
 
 $(document).ready(function(){
 	let apikey ;
+	let editId = "";
 	//when clicking on new it hide the list-container and show new-container  
 	$("#new-item").click(() => {
 		$(".list-container").addClass("hide");
@@ -25,40 +26,35 @@ $(document).ready(function(){
 
 
 
-	// FbApi.getTodos()
-	// .then(()=>{
-	// 	FbApi.writeDom();
-	// 	countTask();
-	// 	// console.log("results",results);
-	// })
-	// .catch((error)=>{
-	// 	console.log("getTodos error",error);
-	// });
-
-
-
-
-
 	//add todo
 	//when writing in the text box of the new page
-	$("#add-todo-button").click(() => {
-		//add new object that is not completed (isCompleted:false) and will add to to do list .
-		let newTodo = {
-			isCompleted:false,
-			task:$("#add-todo-text").val()
-		};
-		console.log("newTodo",newTodo);
-
-		FbApi.addTodo (newTodo).then(()=> {
-			$("#add-todo-text").val("");
-			$(".new-container").addClass("hide");
-			$(".list-container").removeClass("hide");	
-			FbApi.writeDom(apikey);
-		}).catch((error)=> {
-			console.log("error",error);
-		});
-	});
-
+	 $('#add-todo-button').click(() => {
+      let newTodo = {
+          isCompleted: false,
+          task: $('#add-todo-text').val()
+      };
+    if(editId.length > 0){
+      //edit
+      FbApi.editTodo(apikey, newTodo, editId).then(() => {
+        $('#add-todo-text').val("");
+        editId = "";
+        $('.new-container').addClass('hide');
+        $('.list-container').removeClass('hide');
+        FbApi.writeDom(apikey);
+      }).catch((error) => {
+        console.log("addTodo error", error);
+      });
+    } else{
+      FbApi.addTodo(apikey, newTodo).then(() => {
+        $('#add-todo-text').val("");
+        $('.new-container').addClass('hide');
+        $('.list-container').removeClass('hide');
+        FbApi.writeDom(apikey);
+      }).catch((error) => {
+        console.log("addTodo error", error);
+      });      
+    }
+  });
 	// delete todo
 	$(".main-container").on("click",'.delete',(event)=> {
 		FbApi.deleteTodo(apikey , event.target.id).then(()=>{
@@ -69,24 +65,17 @@ $(document).ready(function(){
 	});
 	
 
-	//edit todo 
+	// //edit todo 
 	$(".main-container").on("click",'.edit',(event)=> {
 		//closest go up one level
 		//find go down one level
-		//when clicking in the edit it grap the text and put in the text input.
-		
+		//when clicking in the edit it grap the text and put in the text input.	
 		let editText = $(event.target).closest('.col-xs-4').siblings('.col-xs-8').find('.task').html();
-		console.log("editText",editText);
-		FbApi.editTodo(event.target.id).then(()=>{
+		editId = event.target.id;
 		$(".list-container").addClass("hide");
 		$(".new-container").removeClass("hide");
 		$("#add-todo-text").val(editText);
 
-			// FbApi.writeDom();
-			// countTask();
-		}).catch((error)=>{
-			console.log(" error in editTodo",error);
-		});
 	});
 
 
@@ -94,8 +83,11 @@ $(document).ready(function(){
 	//complete todo 
 	$(".main-container").on("click", 'input[type="checkbox"]',(event)=>{
 		console.log("id",event.target.id);
-			//convert the item that you click on to be completed .
-		FbApi.checker(event.target.id).then(()=>{
+		let myTodo ={
+			isCompleted :event.target.checked,
+			task: $(event.target).siblings('.task').html()
+		};
+		FbApi.editTodo(apikey, myTodo ,event.target.id).then(()=>{
 			FbApi.writeDom(apikey);
 			//update the counter
 		}).catch((error)=>{

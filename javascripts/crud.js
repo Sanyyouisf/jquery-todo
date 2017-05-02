@@ -32,22 +32,18 @@ var FbApi = ((oldCrap) => {
 
 	oldCrap.addTodo = (apikeys,newTodo) => {
 		return new Promise ((resolve,reject) => {
-			//newTodo.id =item +the number of items in the todo array (for example item3).
-			newTodo.id = `item${FbApi.todoGetter().length}`;
-			console.log("newTodo",newTodo);
-			//push the new item (with the id:item3 for example)to the todo array. 
-			FbApi.setSingleTodo(newTodo);
-			resolve();
+			$.ajax({
+				method :'post',
+				url: `${apikeys.databaseURL}/items.json`,
+				data:JSON.stringify(newTodo)//
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
-	//check for the item is completed or not 
-	oldCrap.checker = (apikeys,id) => {
-		return new Promise ((resolve,reject) => {
-			FbApi.setChecker(id);
-			resolve();
-		});
-	};
 
 	//delete the item from the array
 	oldCrap.deleteTodo = (apikeys,id) => {
@@ -63,10 +59,17 @@ var FbApi = ((oldCrap) => {
 		});
 	};
 
-	oldCrap.editTodo = (apikeys,id) => {
+	oldCrap.editTodo = (apikeys,editTodo,id) => {
 		return new Promise ((resolve,reject) => {
-			FbApi.duhlete(id);
-			resolve();
+			$.ajax({
+				method :'put',
+				url: `${apikeys.databaseURL}/items/${id}.json`,
+				data:JSON.stringify(editTodo)//
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
