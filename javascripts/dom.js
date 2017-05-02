@@ -1,5 +1,13 @@
 var FbApi = ((otherOldCrap) => {
 
+    otherOldCrap.countTask = () => {
+        //number of uncompleted tasks(in todo list).
+        let remainingTasks = $("#incompleted-tasks li").length;
+        //every 300 sec will fadein with the new number of uncompleted.
+        $("#counter").hide().fadeIn(300).html(remainingTasks);
+    };
+
+
   otherOldCrap.writeDom = (keys) => {
     FbApi.getTodos(keys).then((results) => {
       let todos = results;
@@ -34,10 +42,22 @@ var FbApi = ((otherOldCrap) => {
 
       $('#completed-tasks').html(doneString);
       $('#incompleted-tasks').html(notDoneString);
+      otherOldCrap.countTask();
     }).catch((error) => {
       console.log("writedom error", error);
     });
   };
+
+
+
+
+
+
+
+
+
+
+
 
   return otherOldCrap;
 })(FbApi || {});

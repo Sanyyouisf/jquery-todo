@@ -30,7 +30,7 @@ var FbApi = ((oldCrap) => {
 	};
 
 
-	oldCrap.addTodo = (newTodo) => {
+	oldCrap.addTodo = (apikeys,newTodo) => {
 		return new Promise ((resolve,reject) => {
 			//newTodo.id =item +the number of items in the todo array (for example item3).
 			newTodo.id = `item${FbApi.todoGetter().length}`;
@@ -42,7 +42,7 @@ var FbApi = ((oldCrap) => {
 	};
 
 	//check for the item is completed or not 
-	oldCrap.checker = (id) => {
+	oldCrap.checker = (apikeys,id) => {
 		return new Promise ((resolve,reject) => {
 			FbApi.setChecker(id);
 			resolve();
@@ -50,14 +50,20 @@ var FbApi = ((oldCrap) => {
 	};
 
 	//delete the item from the array
-	oldCrap.deleteTodo = (id) => {
+	oldCrap.deleteTodo = (apikeys,id) => {
 		return new Promise ((resolve,reject) => {
-			FbApi.duhlete(id);
-			resolve();
+			$.ajax({
+				method :'delete',
+				url: `${apikeys.databaseURL}/items/${id}.json`
+			}).done(()=>{
+				resolve();
+			}).fail((error)=>{
+				reject(error);
+			});
 		});
 	};
 
-	oldCrap.editTodo = (id) => {
+	oldCrap.editTodo = (apikeys,id) => {
 		return new Promise ((resolve,reject) => {
 			FbApi.duhlete(id);
 			resolve();

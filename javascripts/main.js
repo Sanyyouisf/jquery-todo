@@ -18,7 +18,6 @@ $(document).ready(function(){
 		apikey = key;
     firebase.initializeApp(apikey);
     FbApi.writeDom(apikey);
-     countTask();
    }).catch((error) => {
      console.log("key errors", error);
    });
@@ -54,8 +53,7 @@ $(document).ready(function(){
 			$("#add-todo-text").val("");
 			$(".new-container").addClass("hide");
 			$(".list-container").removeClass("hide");	
-			FbApi.writeDom();
-			countTask();
+			FbApi.writeDom(apikey);
 		}).catch((error)=> {
 			console.log("error",error);
 		});
@@ -63,9 +61,8 @@ $(document).ready(function(){
 
 	// delete todo
 	$(".main-container").on("click",'.delete',(event)=> {
-		FbApi.deleteTodo(event.target.id).then(()=>{
-			FbApi.writeDom();
-			countTask();
+		FbApi.deleteTodo(apikey , event.target.id).then(()=>{
+			FbApi.writeDom(apikey);
 		}).catch((error)=>{
 			console.log(" error in deleteTodo",error);
 		});
@@ -99,9 +96,8 @@ $(document).ready(function(){
 		console.log("id",event.target.id);
 			//convert the item that you click on to be completed .
 		FbApi.checker(event.target.id).then(()=>{
-			FbApi.writeDom();
+			FbApi.writeDom(apikey);
 			//update the counter
-			countTask();
 		}).catch((error)=>{
 			console.log("checker error",error);
 		});
@@ -109,11 +105,6 @@ $(document).ready(function(){
 
 
 
-	let countTask = () => {
-		//number of uncompleted tasks(in todo list).
-		let remainingTasks = $("#incompleted-tasks li").length;
-		//every 300 sec will fadein with the new number of uncompleted.
-		$("#counter").hide().fadeIn(300).html(remainingTasks);
-	};
+	
 
 });
