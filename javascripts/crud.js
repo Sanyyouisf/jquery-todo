@@ -10,7 +10,7 @@ var FbApi = ((oldCrap) => {
 				let response = data;
 				console.log("response",response);
 				//Object.keys convert the response object to an array 
-				//forEach will loop through this aray item0,item1,item2
+				//forEach will loop through this aray [item0,item1,item2]
 				Object.keys(response).forEach((key) =>{
 					console.log("key",key);
 					response[key].id = key;
@@ -21,7 +21,7 @@ var FbApi = ((oldCrap) => {
 					console.log("items",items);
 				});
 				resolve(items);
-				// console.log("data",data);
+				// console.log("items in resolve",items);
 			})
 			.fail((error)=>{
 				reject(error);
@@ -32,10 +32,11 @@ var FbApi = ((oldCrap) => {
 
 	oldCrap.addTodo = (apikeys,newTodo) => {
 		return new Promise ((resolve,reject) => {
+			//Load data from the server using a HTTP POST request
 			$.ajax({
 				method :'post',
 				url: `${apikeys.databaseURL}/items.json`,
-				data:JSON.stringify(newTodo)//
+				data:JSON.stringify(newTodo)//this method converts a JavaScript value to a JSON string
 			}).done(()=>{
 				resolve();
 			}).fail((error)=>{
@@ -61,6 +62,7 @@ var FbApi = ((oldCrap) => {
 
 	oldCrap.editTodo = (apikeys,editTodo,id) => {
 		return new Promise ((resolve,reject) => {
+			//POST is used to create” and “PUT is used to edit.
 			$.ajax({
 				method :'put',
 				url: `${apikeys.databaseURL}/items/${id}.json`,
