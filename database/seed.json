@@ -1,0 +1,16 @@
+{
+  "items" : {
+    "item0" : {
+      "isCompleted" : true,
+      "task" : "mow the lawn"
+    },
+    "item1" : {
+      "isCompleted" : false,
+      "task" : "eat chips"
+    },
+    "item2" : {
+      "isCompleted" : false,
+      "task" : "take a nap"
+    }
+  }
+}
