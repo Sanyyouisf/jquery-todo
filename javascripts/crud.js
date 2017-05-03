@@ -8,17 +8,17 @@ var FbApi = ((oldCrap) => {
 			.done((data)=>{
 				//response here is object  of items
 				let response = data;
-				console.log("response",response);
+				// console.log("response",response);
 				//Object.keys convert the response object to an array 
 				//forEach will loop through this aray [item0,item1,item2]
 				Object.keys(response).forEach((key) =>{
-					console.log("key",key);
+					// console.log("key",key);
 					response[key].id = key;
 					//adding new item to the array that have (item.id=0 for example)
 					//and push it to the array
 					items.push(response[key]);
-					console.log("response[key]",response[key]);
-					console.log("items",items);
+					// console.log("response[key]",response[key]);
+					// console.log("items",items);
 				});
 				resolve(items);
 				// console.log("items in resolve",items);

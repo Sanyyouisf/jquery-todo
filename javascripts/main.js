@@ -9,6 +9,10 @@ $(document).ready(function(){
 
 	});
 
+
+
+
+
 	//when clicking on new it hide the new-container and show list-container  
 	$("#list-items").click(() => {
 		$(".new-container").addClass("hide");
@@ -82,7 +86,7 @@ $(document).ready(function(){
 
 	//complete todo 
 	$(".main-container").on("click", 'input[type="checkbox"]',(event)=>{
-		console.log("id",event.target.id);
+		// console.log("id",event.target.id);
 		let myTodo ={
 			isCompleted :event.target.checked,
 			task: $(event.target).siblings('.task').html()
@@ -95,6 +99,22 @@ $(document).ready(function(){
 		});
 	});
 
+
+	$("#registerButton").click(()=>{
+		console.log("register");
+		let email = $("#inputEmail").val();
+		let password = $("#inputPassword").val();
+		let username = $("#inputUsername").val();
+
+		let user = {email,password};//we use this when the key and value is the same.
+		FbApi.registerUser(user).then((response)=> {
+			console.log("register response",response);
+
+		}).catch((error)=>{
+			console.log("error in register",error);
+		});
+
+	});
 
 
 	
