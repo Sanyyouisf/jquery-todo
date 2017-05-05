@@ -32,6 +32,7 @@ var FbApi = ((oldCrap) => {
 
 
 	oldCrap.addTodo = (apikeys,newTodo) => {
+		newTodo.uid= FbApi.credentialsCurrentUser().uid;
 		return new Promise ((resolve,reject) => {
 			//Load data from the server using a HTTP POST request
 			$.ajax({
@@ -62,6 +63,7 @@ var FbApi = ((oldCrap) => {
 	};
 
 	oldCrap.editTodo = (apikeys,editTodo,id) => {
+		editTodo.uid= FbApi.credentialsCurrentUser().uid;
 		return new Promise ((resolve,reject) => {
 			//POST is used to create” and “PUT is used to edit.
 			$.ajax({
