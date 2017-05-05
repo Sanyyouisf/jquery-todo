@@ -4,21 +4,22 @@ var FbApi = ((oldCrap) => {
 	oldCrap.getTodos = (apikeys) =>{
 		let items =[];
 		return new Promise ((resolve,reject) => {
-			$.ajax (`${apikeys.databaseURL}/items.json`)
+    		let uid=FbApi.credentialsCurrentUser().uid;
+			$.ajax (`${apikeys.databaseURL}/items.json?orderBy="uid"&equalTo="${uid}"`)
 			.done((data)=>{
 				//response here is object  of items
 				let response = data;
-				console.log("response",response);
+				// console.log("response",response);
 				//Object.keys convert the response object to an array 
 				//forEach will loop through this aray [item0,item1,item2]
 				Object.keys(response).forEach((key) =>{
-					console.log("key",key);
+					// console.log("key",key);
 					response[key].id = key;
 					//adding new item to the array that have (item.id=0 for example)
 					//and push it to the array
 					items.push(response[key]);
-					console.log("response[key]",response[key]);
-					console.log("items",items);
+					// console.log("response[key]",response[key]);
+					// console.log("items",items);
 				});
 				resolve(items);
 				// console.log("items in resolve",items);
@@ -31,6 +32,7 @@ var FbApi = ((oldCrap) => {
 
 
 	oldCrap.addTodo = (apikeys,newTodo) => {
+		newTodo.uid= FbApi.credentialsCurrentUser().uid;
 		return new Promise ((resolve,reject) => {
 			//Load data from the server using a HTTP POST request
 			$.ajax({
@@ -61,6 +63,7 @@ var FbApi = ((oldCrap) => {
 	};
 
 	oldCrap.editTodo = (apikeys,editTodo,id) => {
+		editTodo.uid= FbApi.credentialsCurrentUser().uid;
 		return new Promise ((resolve,reject) => {
 			//POST is used to create” and “PUT is used to edit.
 			$.ajax({

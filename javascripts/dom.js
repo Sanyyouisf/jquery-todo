@@ -13,7 +13,7 @@ var FbApi = ((otherOldCrap) => {
       let todos = results;
       let doneString = "";
       let notDoneString = "";
-      console.log("todos in writeDom", todos);
+      // console.log("todos in writeDom", todos);
 
       todos.forEach((todo) => {
         if (todo.isCompleted) {
@@ -49,7 +49,13 @@ var FbApi = ((otherOldCrap) => {
   };
 
 
-
+  otherOldCrap.createLogoutButton = (apikey) => {
+    let uid=FbApi.credentialsCurrentUser().uid;
+    FbApi.getUser(apikey,uid).then((user)=>{
+        let logoutButton = `<button class ="btn btn-danger" id="logoutButton">LOGOUT ${user.username}</button>`;
+      $("#logout-container").html(logoutButton);  
+    });
+  };
 
 
 
