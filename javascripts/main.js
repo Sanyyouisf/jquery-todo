@@ -19,13 +19,13 @@ $(document).ready(function() {
     });
 
     FbApi.firebaseCredentials().then((key) => {
+        console.log("FbApi.firebaseCredentials()", FbApi.firebaseCredentials());
         apikey = key;
         firebase.initializeApp(apikey);
         FbApi.writeDom(apikey);
     }).catch((error) => {
         console.log("key errors", error);
     });
-
 
 
 
@@ -45,7 +45,7 @@ $(document).ready(function() {
                 $('.list-container').removeClass('hide');
                 FbApi.writeDom(apikey);
             }).catch((error) => {
-                console.log("addTodo error", error);
+                console.log("Edit Todo error", error);
             });
         } else {
             FbApi.addTodo(apikey, newTodo).then(() => {
@@ -54,21 +54,22 @@ $(document).ready(function() {
                 $('.list-container').removeClass('hide');
                 FbApi.writeDom(apikey);
             }).catch((error) => {
-                console.log("addTodo error", error);
+                console.log("Add Todo error", error);
             });
         }
     });
+
     // delete todo
     $(".main-container").on("click", '.delete', (event) => {
         FbApi.deleteTodo(apikey, event.target.id).then(() => {
             FbApi.writeDom(apikey);
         }).catch((error) => {
-            console.log(" error in deleteTodo", error);
+            console.log("Delete Todo error ", error);
         });
     });
 
 
-    // //edit todo 
+    // event edit todo 
     $(".main-container").on("click", '.edit', (event) => {
         //closest go up one level
         //find go down one level
@@ -98,24 +99,31 @@ $(document).ready(function() {
         });
     });
 
-
+    //register function
     $("#registerButton").click(() => {
-        console.log("register");
         let email = $("#inputEmail").val();
         let password = $("#inputPassword").val();
         let username = $("#inputUsername").val();
-
         let user = { email, password }; //we use this when the key and value is the same.
         FbApi.registerUser(user).then((response) => {
             console.log("register respresponseonse", response.uid);
-            let newUser ={
-            	uid: response.uid,
-            	username:username
+            let newUser = {
+                uid: response.uid,
+                username: username
             };
-            FbApi.addUser(apikey , newUser).then((response) => {
-            	console.log(" addUser response",response);
+            FbApi.addUser(apikey, newUser).then((response) => {
+                FbApi.loginUser(user).then((response) => {
+                    console.log("login successfly");
+                    console.log("response", response);
+                    clearLogin();
+                    $("#login-container").addClass("hide");
+                    $(".main-container").removeClass("hide");
+                    FbApi.writeDom(apikey);
+                }).catch((error) => {
+                    console.log("error in register", error.message);
+                });
             }).catch((error) => {
-                console.log("error in addUser", error);
+                console.log("error in register", error);
             });
         }).catch((error) => {
             console.log("error in register", error);
@@ -123,29 +131,39 @@ $(document).ready(function() {
 
     });
 
-    let clearLogin = ()=>{
-    	$("#inputEmail").val("");
-    	$("#inputPassword").val("");
-    	$("#inputUsername").val("");
+    let clearLogin = () => {
+        $("#inputEmail").val("");
+        $("#inputPassword").val("");
+        $("#inputUsername").val("");
     };
 
-    $("#loginButton").click(()=>{
-    	let email = $("#inputEmail").val();
-    	let password = $("#inputPassword").val();
-    	let user = {email,password};
-    	FbApi.loginUser(user).then((response)=>{
-    		console.log("response",response);
-    		clearLogin();
-    		$("#login-container").addClass("hide");
-    		$(".main-container").removeClass("hide");
-    		FbApi.writeDom(apikey);
-    	}).catch((error)=>{
+    //login function
+    $("#loginButton").click(() => {
+        let email = $("#inputEmail").val();
+        let password = $("#inputPassword").val();
+        let user = { email, password };
+        FbApi.loginUser(user).then((response) => {
+            console.log("response", response);
+            clearLogin();
+            $("#login-container").addClass("hide");
+            $(".main-container").removeClass("hide");
+            // FbApi.createLogoutButton(apikey);
+            FbApi.writeDom(apikey);
+            FbApi.createLogoutButton(apikey);
+        }).catch((error) => {
             console.log("error in loginUser", error.message);
-    	});
+        });
 
+     
     });
 
-
+    $("#logout-container").on('click','#logoutButton',()=>{
+    	clearLogin();
+    	FbApi.logoutUser();
+    	$("#login-container").removeClass("hide");
+        $(".main-container").addClass("hide");
+        console.log("swich the view");
+    });
 
 
 });
